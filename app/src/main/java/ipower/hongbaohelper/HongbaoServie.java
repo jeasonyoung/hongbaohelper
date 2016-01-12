@@ -32,6 +32,8 @@ public class HongbaoServie extends AccessibilityService {
     //拆红包关键字
     private static final String PACKET_OPEN_KEY = "拆红包";
 
+    private boolean isFirstChecked;
+
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -69,6 +71,7 @@ public class HongbaoServie extends AccessibilityService {
         PendingIntent pendingIntent = notify.contentIntent;
         try{
             Log.d(TAG,"通知栏消息打开=>" + e);
+            isFirstChecked = true;
             pendingIntent.send();
         }catch(Exception ex) {
             Log.e(TAG, "通知栏消息打开异常:" + ex.getMessage(), ex);
@@ -93,7 +96,8 @@ public class HongbaoServie extends AccessibilityService {
                     //最新的红包领取
                     final AccessibilityNodeInfo parent = list.get(list.size() - 1).getParent();
                     Log.i(TAG,"领取红包＝>" + parent);
-                    if(parent != null){
+                    if(parent != null && isFirstChecked){
+                        isFirstChecked = false;
                         parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     }
                 }
